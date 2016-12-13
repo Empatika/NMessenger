@@ -52,9 +52,9 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
     /** String to present as the content of the cell*/
     public var textMessegeString: NSAttributedString? {
         get {
-            return self.textMessegeNode.attributedString
+            return self.textMessegeNode.attributedText
         } set {
-            self.textMessegeNode.attributedString = newValue
+            self.textMessegeNode.attributedText = newValue
         }
     }
     /** Overriding from super class
@@ -137,7 +137,7 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
                 outputString.addAttribute(NSForegroundColorAttributeName, value: UIColor.blueColor(), range: match.range)
             }
         }
-        self.textMessegeNode.attributedString = outputString
+        self.textMessegeNode.attributedText = outputString
         self.textMessegeNode.accessibilityIdentifier = "labelMessage"
         self.textMessegeNode.isAccessibilityElement = true
         self.addSubnode(textMessegeNode)
@@ -146,9 +146,9 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
     //MARK: Helper Methods
     /** Updates the attributed string to the correct incoming/outgoing settings and lays out the component again*/
     private func updateAttributedText() {
-        let tmpString = NSMutableAttributedString(attributedString: self.textMessegeNode.attributedString!)
+        let tmpString = NSMutableAttributedString(attributedString: self.textMessegeNode.attributedText!)
         tmpString.addAttributes([NSForegroundColorAttributeName: isIncomingMessage ? incomingTextColor : outgoingTextColor, NSFontAttributeName: isIncomingMessage ? incomingTextFont : outgoingTextFont], range: NSMakeRange(0, tmpString.length))
-        self.textMessegeNode.attributedString = tmpString
+        self.textMessegeNode.attributedText = tmpString
         
         setNeedsLayout()
     }
@@ -159,15 +159,7 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
      Overriding layoutSpecThatFits to specifiy relatiohsips between elements in the cell
      */
     override public func layoutSpecThatFits(constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        let width = constrainedSize.max.width * 0.90 - self.insets.left - self.insets.right
-        
-        let tmp = ASRelativeSizeRangeMake(ASRelativeSizeMakeWithCGSize(CGSizeZero), ASRelativeSizeMake(ASRelativeDimensionMakeWithPoints(width),ASRelativeDimensionMakeWithPercent(1)))
-        
-        textMessegeNode.sizeRange = tmp
-        
-        let textMessegeSize = ASStaticLayoutSpec(children: [self.textMessegeNode])
-        
-        return  ASInsetLayoutSpec(insets: insets, child: textMessegeSize)
+        return  ASInsetLayoutSpec(insets: insets, child: textMessegeNode)
         
     }
     
@@ -196,18 +188,18 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
         {
             if !self.lockKey
             {
-                if let tmpString = self.textMessegeNode.attributedString
+                if let tmpString = self.textMessegeNode.attributedText
                 {
                     let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                     attributedString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.lightGrayColor(), range: textRange)
-                    self.textMessegeNode.attributedString = attributedString
+                    self.textMessegeNode.attributedText = attributedString
                     UIApplication.sharedApplication().openURL(value as! NSURL)
                     delay(0.4) {
-                        if let tmpString = self.textMessegeNode.attributedString
+                        if let tmpString = self.textMessegeNode.attributedText
                         {
                             let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                             attributedString.removeAttribute(NSBackgroundColorAttributeName, range: textRange)
-                            self.textMessegeNode.attributedString = attributedString
+                            self.textMessegeNode.attributedText = attributedString
                         }
                     }
                 }
@@ -242,11 +234,11 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
         if attribute == "LinkAttribute"
         {
             self.lockKey = true
-            if let tmpString = self.textMessegeNode.attributedString
+            if let tmpString = self.textMessegeNode.attributedText
             {
                 let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                 attributedString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.lightGrayColor(), range: textRange)
-                self.textMessegeNode.attributedString = attributedString
+                self.textMessegeNode.attributedText = attributedString
 
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
                 
@@ -284,11 +276,11 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
                 
             }
             delay(0.4) {
-                if let tmpString = self.textMessegeNode.attributedString
+                if let tmpString = self.textMessegeNode.attributedText
                 {
                     let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                     attributedString.removeAttribute(NSBackgroundColorAttributeName, range: textRange)
-                    self.textMessegeNode.attributedString = attributedString
+                    self.textMessegeNode.attributedText = attributedString
                 }
             }
         }
@@ -296,11 +288,11 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
         {
             let phoneNumber = value as! String
             self.lockKey = true
-            if let tmpString = self.textMessegeNode.attributedString
+            if let tmpString = self.textMessegeNode.attributedText
             {
                 let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                 attributedString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.lightGrayColor(), range: textRange)
-                self.textMessegeNode.attributedString = attributedString
+                self.textMessegeNode.attributedText = attributedString
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
                 
                 let callPhoneNumberAction = UIAlertAction(title: "Call \(phoneNumber)", style: .Default, handler: {
@@ -350,11 +342,11 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
                 
             }
             delay(0.4) {
-                if let tmpString = self.textMessegeNode.attributedString
+                if let tmpString = self.textMessegeNode.attributedText
                 {
                     let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                     attributedString.removeAttribute(NSBackgroundColorAttributeName, range: textRange)
-                    self.textMessegeNode.attributedString = attributedString
+                    self.textMessegeNode.attributedText = attributedString
                 }
             }
         }
@@ -398,7 +390,7 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
      Copy Selector for UIMenuController
      */
     public func copySelector() {
-        UIPasteboard.generalPasteboard().string = self.textMessegeNode.attributedString!.string
+        UIPasteboard.generalPasteboard().string = self.textMessegeNode.attributedText!.string
     }
     
 }

@@ -136,7 +136,7 @@ public class MessageGroup: GeneralMessengerCell {
         
         //make a space for the avatar if needed
         if let avatarNode = self.avatarNode {
-            let size = avatarNode.measure(constrainedSize.max)
+            let size = avatarNode.layoutThatFits(ASSizeRange(min: CGSize.zero, max: constrainedSize.max)).size
             tableWidth = constrainedSize.max.width - size.width - self.avatarInsets.left - self.avatarInsets.right - self.cellPadding.left - self.cellPadding.right - messageOffset
         } else {
             tableWidth = constrainedSize.max.width - self.cellPadding.left - self.cellPadding.right - self.messageOffset
@@ -147,12 +147,12 @@ public class MessageGroup: GeneralMessengerCell {
         //get the size of every message in the group to calculate height
         for message in messages {
             let newSize = ASSizeRange(min: constrainedSize.min, max: CGSizeMake(tableWidth, constrainedSize.max.height))
-            let size = message.measureWithSizeRange(newSize).size
+            let size = message.layoutThatFits(newSize).size
             elementHeight += size.height
         }
-        self.messageTable.preferredFrameSize = CGSizeMake(tableWidth, elementHeight)
+        self.messageTable.style.preferredSize = CGSizeMake(tableWidth, elementHeight)
         
-        var retLayout:ASLayoutSpec = ASStaticLayoutSpec(children: [self.messageTable])
+        var retLayout:ASLayoutSpec = ASAbsoluteLayoutSpec(children: [self.messageTable])
         
         var stackLayout: ASStackLayoutSpec?
         var insetLayout: ASInsetLayoutSpec?
@@ -160,11 +160,11 @@ public class MessageGroup: GeneralMessengerCell {
         
         //add the avatar to the layout
         if let avatarNode = self.avatarNode {
-            let avatarSizeLayout = ASStaticLayoutSpec(children: [avatarNode])
+            let avatarSizeLayout = ASAbsoluteLayoutSpec(children: [avatarNode])
             
             //create avatar button
-            self.avatarButtonNode.preferredFrameSize = avatarNode.measure(constrainedSize.max)
-            let avatarButtonSizeLayout = ASStaticLayoutSpec(children: [self.avatarButtonNode])
+            self.avatarButtonNode.style.preferredSize = avatarNode.layoutThatFits(ASSizeRange(min: CGSize.zero, max: constrainedSize.max)).size
+            let avatarButtonSizeLayout = ASAbsoluteLayoutSpec(children: [self.avatarButtonNode])
             let avatarBackStack = ASBackgroundLayoutSpec(child: avatarButtonSizeLayout, background: avatarSizeLayout)
             
             let ins = ASInsetLayoutSpec(insets: self.avatarInsets, child: avatarBackStack)

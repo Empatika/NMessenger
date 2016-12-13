@@ -29,7 +29,7 @@ public class HeadLoadingIndicator: GeneralMessengerCell {
     /** Sets the loading attributed text for the spinner. Defaults to *"Loading..."* */
     public var loadingAttributedText:NSAttributedString? {
         set {
-            text.attributedString = newValue
+            text.attributedText = newValue
             self.setNeedsLayout()
         } get {
             return text.attributedText
@@ -39,7 +39,7 @@ public class HeadLoadingIndicator: GeneralMessengerCell {
     public override init() {
         super.init()
         addSubnode(text)
-        text.attributedString = NSAttributedString(
+        text.attributedText = NSAttributedString(
             string: "Loading…",
             attributes: [
                 NSFontAttributeName: UIFont.systemFontOfSize(12),
@@ -63,7 +63,7 @@ public class HeadLoadingIndicator: GeneralMessengerCell {
 
 //MARK: SpinnerNode class
 /**
- Animated spinner. Used by HeadLoadingIndicator. Defaults to *preferredFrameSize.height=32*
+ Animated spinner. Used by HeadLoadingIndicator. Defaults to *style.preferredSize.height=32*
  */
 public class SpinnerNode: ASDisplayNode {
     public var activityIndicatorView: UIActivityIndicatorView {
@@ -72,7 +72,7 @@ public class SpinnerNode: ASDisplayNode {
 
     public override init() {
         super.init(viewBlock: { UIActivityIndicatorView(activityIndicatorStyle: .Gray) }, didLoadBlock: nil)
-        preferredFrameSize.height = 32
+        style.preferredSize.height = 32
     }
     
     override public func didLoad() {
