@@ -81,7 +81,7 @@ public class CustomContentNode: ContentNode {
         self.customView = customView
         dispatch_async(dispatch_get_main_queue()) {
             self.customContentMessegeNode.view.addSubview(customView)
-            self.customContentMessegeNode.preferredFrameSize = customView.frame.size
+            self.customContentMessegeNode.style.preferredSize = customView.frame.size
         }
         self.addSubnode(customContentMessegeNode)
     }
@@ -105,13 +105,7 @@ public class CustomContentNode: ContentNode {
      Overriding layoutSpecThatFits to specifiy relatiohsips between elements in the cell
      */
     override public func layoutSpecThatFits(constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        
-        let width = constrainedSize.max.width
-        let tmp = ASRelativeSizeRangeMake(ASRelativeSizeMakeWithCGSize(CGSizeZero), ASRelativeSizeMake(ASRelativeDimensionMakeWithPoints(width),ASRelativeDimensionMakeWithPercent(1)))
-        
-        customContentMessegeNode.sizeRange = tmp
-        let customContetntSpec = ASStaticLayoutSpec(children: [customContentMessegeNode])
-        return ASInsetLayoutSpec(insets: insets, child: customContetntSpec)
+        return ASInsetLayoutSpec(insets: insets, child: customContentMessegeNode)
     }
     
 }

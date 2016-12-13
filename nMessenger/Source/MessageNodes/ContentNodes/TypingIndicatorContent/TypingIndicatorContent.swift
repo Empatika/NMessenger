@@ -44,7 +44,7 @@ public class TypingIndicatorContent: ContentNode {
         imageView.startAnimating()
         
         self.gifNode.view.addSubview(imageView)
-        self.gifNode.preferredFrameSize = imageView.frame.size
+        self.gifNode.style.preferredSize = imageView.frame.size
 
         self.addSubnode(gifNode)
         
@@ -57,7 +57,7 @@ public class TypingIndicatorContent: ContentNode {
      Overriding layoutSpecThatFits to specifiy relatiohsips between elements in the cell
      */
     override public func layoutSpecThatFits(constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        return ASStaticLayoutSpec(children: [self.gifNode])
+        return ASAbsoluteLayoutSpec(children: [self.gifNode])
     }
     
 }

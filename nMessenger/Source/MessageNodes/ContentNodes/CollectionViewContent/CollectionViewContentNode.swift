@@ -99,7 +99,7 @@ public class CollectionViewContentNode: ContentNode,ASCollectionDelegate,ASColle
                 let tmpNode = ASDisplayNode(viewBlock: { () -> UIView in
                     return tmpView
                 })
-                tmpNode.preferredFrameSize = tmpView.frame.size
+                tmpNode.style.preferredSize = tmpView.frame.size
                 self.collectionViewsDataSource?.append(tmpNode)
             }
         }
@@ -157,8 +157,8 @@ public class CollectionViewContentNode: ContentNode,ASCollectionDelegate,ASColle
         
         super.didLoad()
         
-        self.collectionViewMessageNode.view.asyncDelegate = self
-        self.collectionViewMessageNode.view.asyncDataSource = self
+        self.collectionViewMessageNode.delegate = self
+        self.collectionViewMessageNode.dataSource = self
     }
     
     // MARK: Override AsycDisaplyKit Methods
@@ -174,7 +174,7 @@ public class CollectionViewContentNode: ContentNode,ASCollectionDelegate,ASColle
         {
             for node in tmp
             {
-                let nodeLayout = node.measureWithSizeRange(tmpConstrainedSize)
+                let nodeLayout = node.layoutThatFits(tmpConstrainedSize)
                 let nodeSize = nodeLayout.size
                 if (isSmaller(cellSize,bigger: nodeSize))
                 {
@@ -186,9 +186,9 @@ public class CollectionViewContentNode: ContentNode,ASCollectionDelegate,ASColle
         {
             for node in tmp
             {
-                let nodeLayout = node.measureWithSizeRange(tmpConstrainedSize)
+                let nodeLayout = node.layoutThatFits(tmpConstrainedSize)
                 let nodeSize = nodeLayout.size
-                node.preferredFrameSize = nodeSize
+                node.style.preferredSize = nodeSize
                 if (isSmaller(cellSize,bigger: nodeSize))
                 {
                     cellSize=nodeSize
@@ -218,8 +218,8 @@ public class CollectionViewContentNode: ContentNode,ASCollectionDelegate,ASColle
             }
         }
         
-        self.collectionViewMessageNode.preferredFrameSize = CGSizeMake(width, height)
-        let tmpSizeSpec = ASStaticLayoutSpec(children: [self.collectionViewMessageNode])
+        self.collectionViewMessageNode.style.preferredSize = CGSizeMake(width, height)
+        let tmpSizeSpec = ASAbsoluteLayoutSpec(children: [self.collectionViewMessageNode])
         return tmpSizeSpec
     }
     

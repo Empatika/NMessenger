@@ -54,14 +54,14 @@ public class ImageBubble : Bubble {
         
         if let image = bubbleImage {
             UIGraphicsBeginImageContextWithOptions(image.size, false, image.scale);
-            let context = UIGraphicsGetCurrentContext();
+            let context = UIGraphicsGetCurrentContext()!
             self.bubbleColor.setFill()
             CGContextTranslateCTM(context, 0, image.size.height);
             CGContextScaleCTM(context, 1.0, -1.0);
-            CGContextClipToMask(context, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage);
+            CGContextClipToMask(context, CGRectMake(0, 0, image.size.width, image.size.height), image.CGImage!);
             CGContextFillRect(context, CGRectMake(0, 0, image.size.width, image.size.height));
             
-            var coloredImg = UIGraphicsGetImageFromCurrentImageContext();
+            var coloredImg = UIGraphicsGetImageFromCurrentImageContext()!
             
             UIGraphicsEndImageContext();
             
