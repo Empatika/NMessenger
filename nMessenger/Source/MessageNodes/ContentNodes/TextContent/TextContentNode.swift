@@ -17,7 +17,7 @@ import AsyncDisplayKit
  Defines content that is a text.
  */
 public class TextContentNode: ContentNode,ASTextNodeDelegate {
-
+    
     // MARK: Public Variables
     /** Insets for the node */
     public var insets = UIEdgeInsets(top: 8, left: 10, bottom: 8, right: 10) {
@@ -74,6 +74,8 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
         }
     }
     
+    public var maxWidth: ASDimension?
+    
     // MARK: Private Variables
     /** ASTextNode as the content of the cell*/
     public private(set) var textMessegeNode:ASTextNode = ASTextNode()
@@ -99,18 +101,19 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
      - parameter currentViewController: Must be an UIViewController. Set current view controller holding the cell.
      Calls helper methond to setup cell
      */
-    public init(textMessegeString: String, currentViewController: UIViewController, bubbleConfiguration: BubbleConfigurationProtocol? = nil)
+    public init(textMessegeString: String, currentViewController: UIViewController, bubbleConfiguration: BubbleConfigurationProtocol? = nil, maxWidth: ASDimension? = nil)
     {
         super.init(bubbleConfiguration: bubbleConfiguration)
         self.currentViewController = currentViewController
         self.setupTextNode(textMessegeString)
+        self.maxWidth = maxWidth
     }
     
     // MARK: Initialiser helper method
     
     /**
      Creates the text to be display in the cell. Finds links and phone number in the string and creates atrributed string.
-      - parameter textMessegeString: Must be String. Sets text for cell.
+     - parameter textMessegeString: Must be String. Sets text for cell.
      */
     private func setupTextNode(textMessegeString: String)
     {
@@ -159,8 +162,11 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
      Overriding layoutSpecThatFits to specifiy relatiohsips between elements in the cell
      */
     override public func layoutSpecThatFits(constrainedSize: ASSizeRange) -> ASLayoutSpec {
-        return  ASInsetLayoutSpec(insets: insets, child: textMessegeNode)
+        if let maxWidth = maxWidth {
+            textMessegeNode.style.maxWidth = ASDimension(unit: .Points, value: maxWidth.value)
+        }
         
+        return  ASInsetLayoutSpec(insets: insets, child: textMessegeNode)
     }
     
     // MARK: ASTextNodeDelegate
@@ -239,7 +245,7 @@ public class TextContentNode: ContentNode,ASTextNodeDelegate {
                 let attributedString =  NSMutableAttributedString(attributedString: tmpString)
                 attributedString.addAttribute(NSBackgroundColorAttributeName, value: UIColor.lightGrayColor(), range: textRange)
                 self.textMessegeNode.attributedText = attributedString
-
+                
                 let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
                 
                 let openAction = UIAlertAction(title: "Open", style: .Default, handler: {
